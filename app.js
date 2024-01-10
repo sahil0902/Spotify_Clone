@@ -5,6 +5,7 @@ class MusicPlayer {
         this.playButton = document.querySelector("#play");
         this.pauseButton = document.querySelector("#pause");
         this.forwardButton = document.querySelector("#fd");
+        this.reverseButton = document.querySelector("#rd")
         this.rangeInput = document.querySelector("#range");
         this.durationInput = document.querySelector(".progress-bar");
         this.currentTimeElement = document.querySelector(".curr-time");
@@ -25,6 +26,12 @@ class MusicPlayer {
                 title: "Softly",
                 path: "./songs/s2.mp3",
                 cover: "./assets/softly.jpeg"
+            },
+            {
+                singer : "Shubh",
+                title: "King Shit",
+                path: "./songs/KingShit.mp3",
+                cover: "./assets/shubh.jpg"
             }
         ];
 
@@ -35,34 +42,40 @@ class MusicPlayer {
     }
 
     // Play the current song
-    async play() {
-        try {
-            await this.currentSong.play();
-             
-            // Update the singer's name in the HTML
-            this.singer.innerHTML = this.songs[this.currentSongIndex].singer;
-            this.singer.style = "display:block";
-            //change its title too
-            this.songName.innerHTML = this.songs[this.currentSongIndex].title;
-            this.songName.style = "display:block";
+    play() {
+        return new Promise((resolve, reject) => {
+            this.currentSong.play()
+                .then(() => {
+                      // Update cover
+                      this.cover.src = this.songs[this.currentSongIndex].cover;
+                      this.cover.style = "display:block";
+                      this.cover.style.width = "100%";
+                      this.cover.style.height = "100%";
+                    // Update the singer's name in the HTML
+                    this.singer.innerHTML = this.songs[this.currentSongIndex].singer;
+                    this.singer.style = "display:block";
+                    // Change its title too
+                    this.songName.innerHTML = this.songs[this.currentSongIndex].title;
+                    this.songName.style = "display:block";
 
-            //update cover
-            this.cover.src= this.songs[this.currentSongIndex].cover;
-            this.cover.style = "display:block"
-            this.cover.style.width = "100%";
-            this.cover.style.height = "100%";
-            
-            this.playButton.style.display = "none";
-            this.pauseButton.style.display = "block";
-        } catch (error) {
-            console.error("Failed to play the song:", error);
-        }
+                  
+
+                    this.playButton.style.display = "none";
+                    this.pauseButton.style.display = "block";
+
+                    resolve();
+                })
+                .catch(error => {
+                    console.error("Failed to play the song:", error);
+                    reject(error);
+                });
+        });
     }
 
     // Pause the current song
     async pause() {
         try {
-           await this.currentSong.pause();
+            this.currentSong.pause();
             this.playButton.style.display = "block";
             this.pauseButton.style.display = "none";
         } catch (error) {
@@ -75,7 +88,7 @@ class MusicPlayer {
         try {
             // Pause the current song and remove the timeupdate event listener
             this.currentSong.pause();
-            this.cover.src = '';
+          
             this.currentSong.removeEventListener("timeupdate", () => this.updateProgress());
 
 
@@ -94,6 +107,37 @@ class MusicPlayer {
         } catch (error) {
             console.error("Failed to forward the song:", error);
         }
+    }
+     // go to the prev song
+     async reverse() {
+        ///only if there's at least one song 
+         if (this.currentSongIndex >0) {
+    
+            try {
+                // Check if there is at least one song in the playlist
+               
+                // Pause the current song and remove the timeupdate event listener
+                this.currentSong.pause();
+                 this.cover.src = '';
+                 this.currentSong.removeEventListener("timeupdate", () => this.updateProgress());
+    
+    
+                // Update the current song index and create a new Audio object for the next song
+                this.currentSongIndex = (this.currentSongIndex - 1) % this.songs.length;
+               this.currentSong = new Audio(this.songs[this.currentSongIndex].path);
+    
+                // Add a loadedmetadata event listener to update the progress and re-add the timeupdate event listener
+                this.currentSong.addEventListener("loadedmetadata", () => {
+                    this.updateProgress();
+                    this.currentSong.addEventListener("timeupdate", () => this.updateProgress());
+                });
+    
+                // Play the next song
+                await this.play();
+            } catch (error) {
+                console.error("Failed to forward the song:", error);
+            }
+            }
     }
     
     // Set the volume of the current song
@@ -131,6 +175,7 @@ class MusicPlayer {
         this.playButton.addEventListener("click", () => this.play());
         this.pauseButton.addEventListener("click", () => this.pause());
         this.forwardButton.addEventListener("click", () => this.forward());
+        this.reverseButton.addEventListener("click",()=> this.reverse());
         this.rangeInput.addEventListener("input", () => {
             const volume = this.rangeInput.value / 100;
             this.setVolume(volume);
