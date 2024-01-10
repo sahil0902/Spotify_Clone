@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="player.css" />
+    <link rel="icon" href="./assets/logo.png" />
+    <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans&family=Poppins&display=swap"
+    rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" /> 
+    <title>Music Player</title>
+    
+</head>
+<body>
+<div id="Player">
+    <img src="./assets/logo.png" id="logo"/>
+    <spam style="padding-left: 0.5rem;">Playing From Track</spam>
+</div>
+<div id = "art">
+  <img src="./assets/softly.jpeg" id="cover">
+  <h5 id="song">Softly</h5>
+  <span id="singer"><br>Karan Aujla</span>
+ 
+</div>
+<div class="playback-bar">
+    <span class="curr-time">00:00</span>
+    <input type="range" min="0" max="100" class="progress-bar" step="1">
+    <span class="tot-time">3:33</span>
+</div>
+<div class="player-controls">
+    <img src="./assets/player_icon1.png" class="player-control-icon">
+    <img src="./assets/player_icon2.png" class="player-control-icon" id="rd">
+    <img src="./assets/player_icon3.png" class="player-control-icon" style="opacity: 1; height: 2rem;" id = "play">
+    <img src="./assets/pause.png" class="player-control-icon"  style="display: none; opacity: 1; height: 2rem;" id = "pause">
+
+    <img src="./assets/player_icon4.png" class="player-control-icon" id="fd">
+    <img src="./assets/player_icon5.png" class="player-control-icon" id="backout">
+    <div class="back"></div>
+    <i class="fa-regular fa-heart" id="heart"></i>
+    <input type="range" id="vol">
+    <i class="fa-solid fa-music" id="v"></i>
+</div>
+<script src="player.js"></script>
+</body>
+</html>

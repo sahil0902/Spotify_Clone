@@ -6,21 +6,22 @@ class MusicPlayer {
         this.pauseButton = document.querySelector("#pause");
         this.forwardButton = document.querySelector("#fd");
         this.reverseButton = document.querySelector("#rd")
-        this.rangeInput = document.querySelector("#range");
+        this.rangeInput = document.querySelector("#vol");
         this.durationInput = document.querySelector(".progress-bar");
         this.currentTimeElement = document.querySelector(".curr-time");
         this.totalTimeElement = document.querySelector(".tot-time");
         this.singer = document.querySelector("#singer");
         this.songName = document.querySelector("#song");
         this.cover = document.querySelector("#cover");
-        let Pl = document.querySelector("#lyric");
-        Pl.onclick = function() {
-            var cover = document.getElementById('cover-animate');
-            cover.style.top = '0';
+        let back = document.querySelector("#backout");
+        back.onclick = function() {
+            console.log("ss");
+            let b = document.querySelector(".back");
+            b.style.bottom = '0';
         
-            setTimeout(function() {
-                window.location.href = 'player.html';
-            }, 500);  // Adjust timing to match the transition duration
+            setTimeout(()=>{
+                window.location.href = 'index.html';
+            },500)
         }
         // Define the songs array
         this.songs = [
@@ -28,19 +29,22 @@ class MusicPlayer {
                 singer: "Falak Shabir",
                 title: "Ijazat",
                 path: "./songs/song.mp3",
-                cover: "./assets/ijazat.jpeg"
+                cover: "./assets/ijazat.jpeg",
+                pic : "./assets/falakshabir.jpg"
             },
             {
                 singer : "Karan Aujla",
                 title: "Softly",
                 path: "./songs/s2.mp3",
-                cover: "./assets/softly.jpeg"
+                cover: "./assets/softly.jpeg",
+                pic : "./assets/KaranAujla.jpg"
             },
             {
                 singer : "Shubh",
                 title: "King Shit",
                 path: "./songs/KingShit.mp3",
-                cover: "./assets/shubh.jpg"
+                cover: "./assets/shubh.jpg",
+                pic : "./assets/shubhpic.jpg"
             }
         ];
 
@@ -55,36 +59,34 @@ class MusicPlayer {
         return new Promise((resolve, reject) => {
             this.currentSong.play()
                 .then(() => {
-                      // Update cover
-                      this.cover.src = this.songs[this.currentSongIndex].cover;
-                      this.cover.style = "display:block";
-                      this.cover.style.width = "100%";
-                      this.cover.style.height = "100%";
-                    // Update the singer's name in the HTML
+                    // Update cover
+                    this.cover.src = this.songs[this.currentSongIndex].cover;
+                    
                     this.singer.innerHTML = this.songs[this.currentSongIndex].singer;
-                    this.singer.style = "display:block";
+                    
                     // Change its title too
                     this.songName.innerHTML = this.songs[this.currentSongIndex].title;
-                    this.songName.style = "display:block";
-
                   
-
+    
+                    // Change the background image
+                    document.documentElement.style.setProperty('--bg-image', `url(${this.songs[this.currentSongIndex].pic})`);
+           
                     this.playButton.style.display = "none";
                     this.pauseButton.style.display = "block";
-
+    
                     resolve();
-                })
-                .catch(error => {
-                    console.error("Failed to play the song:", error);
-                    reject(error);
-                });
+                }).then(() => {
+                    let cov =  this.cover.src
+                    applyAnimation(cov,'forwards');
+                    })
+                   
         });
     }
-
     // Pause the current song
     async pause() {
         try {
             this.currentSong.pause();
+          
             this.playButton.style.display = "block";
             this.pauseButton.style.display = "none";
         } catch (error) {
@@ -112,7 +114,10 @@ class MusicPlayer {
             });
 
             // Play the next song
-            await this.play();
+            await this.play().then(() => {
+                applyAnimation(cov,'forwards');
+                console.log("calling");
+            });
         } catch (error) {
             console.error("Failed to forward the song:", error);
         }
@@ -142,7 +147,9 @@ class MusicPlayer {
                 });
     
                 // Play the next song
-                await this.play();
+                await this.play().then(()=>{
+                    applyAnimation(cov,'reverse');
+                });
             } catch (error) {
                 console.error("Failed to forward the song:", error);
             }
@@ -199,6 +206,78 @@ class MusicPlayer {
         });
         this.currentSong.addEventListener("timeupdate", () => this.updateProgress());
     }
+}
+
+function applyAnimation(cov, direction = 'forwards') {
+    // Start with the original cover
+    this.cover.src = cov;
+
+    // Apply a CSS transition to the cover's opacity
+    this.cover.style.transition = 'opacity 1s ease-in-out';
+    this.cover.style.opacity = 1;
+
+    setTimeout(() => {
+        try {
+            console.log("fade in calling");
+            // Add an animation to the singer element
+            this.singer.style.animation = `
+                fadeIn 1s ease-in-out ${direction},
+                hangingPosition 1s ease-in-out ${direction},
+                changesize 1s ease-in-out ${direction}
+            `;
+
+            // Define the fadeIn keyframes
+            const fadeInKeyframes = `
+                @keyframes fadeIn {
+                    0% {
+                        opacity: 0;
+                    }
+                    100% {
+                        opacity: 1;
+                    }
+                }
+            `;
+
+            // Define the hangingPosition keyframes
+            const hangingPositionKeyframes = `
+                @keyframes hangingPosition {
+                    0% {
+                        transform: translateX(50px);
+                    }
+                    100% {
+                        transform: translateX(0);
+                    }
+                }
+            `;
+            const changesizeframe = `
+            @keyframes changesize {
+                0% {
+                    font-size: 0.8rem;
+                
+                100%{
+                    font-size:1.5rem;
+                }
+            }
+            `;
+
+            // Create a style element and append the keyframes to it
+            const styleElement = document.createElement('style');
+            styleElement.innerHTML = fadeInKeyframes + hangingPositionKeyframes + changesizeframe;
+            document.head.appendChild(styleElement);
+
+            // Fade out the cover
+            this.cover.style.opacity = 0;
+
+            // After the transition ends, remove the cover
+            this.cover.addEventListener('transitionend', () => {
+                this.cover.src = '';
+            }, { once: true });
+
+        } catch (e) {
+            console.log("e", e);
+        }
+
+    }, 2000)
 }
 
 // Create an instance of the MusicPlayer class
