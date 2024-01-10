@@ -13,6 +13,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans&family=Poppins&display=swap"
         rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body>
@@ -134,10 +135,10 @@
         
         <div class="music-player">
             <div class="img-play">
-                <img src="./assets/card2img.jpeg"/>
+                <img src="./assets/ijazat.jpeg" style=" background-image: cover;display:none" id="cover">
             </div>
-            <h5>Falak Shabir</h5>
-            <h6>Ijazat</h6>
+            <h5 id="singer" style="display:none">Falak Shabir</h5>
+            <h6 id="song" style="display:none">Ijazat</h6>
             <i class="fa-regular fa-heart"></i>
             <i class="fa-regular fa-window-maximize" id = "window"></i>
             <i class="fa-solid fa-shuffle" id="shuffle"></i>
@@ -149,9 +150,11 @@
             <div class="player">
                 <div class="player-controls">
                     <img src="./assets/player_icon1.png" class="player-control-icon">
-                    <img src="./assets/player_icon2.png" class="player-control-icon">
-                    <img src="./assets/player_icon3.png" class="player-control-icon" style="opacity: 1; height: 2rem;">
-                    <img src="./assets/player_icon4.png" class="player-control-icon">
+                    <img src="./assets/player_icon2.png" class="player-control-icon" id="rd">
+                    <img src="./assets/player_icon3.png" class="player-control-icon" style="opacity: 1; height: 2rem;" id = "play">
+                    <img src="./assets/pause.png" class="player-control-icon"  style="display: none; opacity: 1; height: 2rem;" id = "pause">
+                
+                    <img src="./assets/player_icon4.png" class="player-control-icon" id="fd">
                     <img src="./assets/player_icon5.png" class="player-control-icon">
                 </div>
                 <div class="playback-bar">
@@ -162,7 +165,7 @@
             </div>
             <div class="controls"></div>
         </div>
-     
+     <script src="app.js"></script>
     </body>
 
     </html>

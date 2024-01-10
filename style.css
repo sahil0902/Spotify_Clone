@@ -28,6 +28,7 @@ overflow: hidden;
     padding: 0 1.5rem 0 1.5rem;
 
 }
+
 .music-player {
     background-color: black;
     position: fixed;
@@ -123,6 +124,15 @@ a{
     font-size: 0.75rem;
     opacity: 0.9rem;
 }
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
 .badge {
     
     background-color: white;
